@@ -12,7 +12,9 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "pavi",
 	Short: "Pavi is a fast and simple SSL/TLS certificate scanner.",
-	Long:  `A command-line tool built with Go to scan SSL/TLS certificates for given domains, checking for expiration dates and other details.`,
+	Long:  `
+	
+	A command-line tool built with Go to scan SSL/TLS certificates for given domains, checking for expiration dates and other details.`,
 }
 
 func Execute() {
