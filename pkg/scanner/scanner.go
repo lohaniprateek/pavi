@@ -11,6 +11,7 @@ type ScanResult struct {
 	Domain    string
 	IssuedOn  time.Time
 	ExpiresOn time.Time
+	DaysLeft  int
 	Error     error
 }
 
@@ -18,13 +19,15 @@ type ScanResult struct {
 func ScanDomains(domains []string, timeout time.Duration) []ScanResult {
 	var wg sync.WaitGroup
 	resultsChan := make(chan ScanResult, len(domains))
-
 	for _, domain := range domains {
 		wg.Add(1)
 		go func(d string) {
 			defer wg.Done()
 
 			certInfo, err := FetchCertificate(d, timeout)
+			expYear := certInfo.Leaf.NotAfter
+			now := time.Now()
+			daysLeft := int(expYear.Sub(now).Hours() / 24)
 			if err != nil {
 				resultsChan <- ScanResult{Domain: d, Error: err}
 				return
@@ -34,6 +37,7 @@ func ScanDomains(domains []string, timeout time.Duration) []ScanResult {
 				Domain:    d,
 				IssuedOn:  certInfo.Leaf.NotBefore,
 				ExpiresOn: certInfo.Leaf.NotAfter,
+				DaysLeft:  daysLeft,
 				Error:     nil,
 			}
 		}(domain)
