@@ -88,14 +88,30 @@ func init() {
 func printResults(results []scanner.ScanResult) {
 	const format = "2006-01-02" // YYYY-MM-DD format for dates
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
-	fmt.Fprintln(w, "DOMAIN\tISSUED ON\tEXPIRES ON\tSTATUS")
-	fmt.Fprintln(w, "------\t---------\t----------\t------")
 
 	for _, res := range results {
 		if res.Error != nil {
 			fmt.Fprintf(w, "%s\tN/A\tN/A\tERROR: %v\n", res.Domain, res.Error)
 		} else {
-			fmt.Fprintf(w, "%s\t%s\t%s\tOK\n", res.Domain, res.IssuedOn.Format(format), res.ExpiresOn.Format(format))
+			fmt.Fprintf(w, "DOMAIN: %v\n", res.Domain)
+
+			fmt.Fprintf(w, "+%s+%s+\n", strings.Repeat("-", 27), strings.Repeat("-", 32))
+			fmt.Fprintf(w, "| Field%s| Value %s|\n", strings.Repeat(" ", 21), strings.Repeat(" ", 25))
+			fmt.Fprintf(w, "|%s+%s+\n", strings.Repeat("-", 27), strings.Repeat("-", 32))
+			const (
+				leftWidth  = 25 // Fixed width for the left column
+				rightWidth = 30 // Fixed width for the right column
+			)
+
+			fmt.Fprintf(w, "| %-*s | %-30v |\n", leftWidth, "Issuance Date", res.IssuedOn.Format("2006-01-02 15:04:05 UTC"))
+			fmt.Fprintf(w, "| %-*s | %-30v |\n", leftWidth, "Expiry Date", res.ExpiresOn.Format("2006-01-02 15:04:05 UTC"))
+			fmt.Fprintf(w, "| %-*s | %-30v |\n", leftWidth, "Days Until Expiry", res.DaysLeft)
+			fmt.Fprintf(w, "| %-*s | %-30v |\n", leftWidth, "Signature", res.Signature)
+			fmt.Fprintf(w, "| %-*s | %-30v |\n", leftWidth, "PublicKey Algorithm", res.PublicKeyAlgo)
+			fmt.Fprintf(w, "| %-*s | %-30v |\n", leftWidth, "Validity", res.Validity)
+			fmt.Fprintf(w, "| %-*s | %-30v |\n", leftWidth, "Ciphers", res.CName[1])
+			fmt.Fprintf(w, "| %-*s | %-30v |\n", leftWidth, "Issuer", res.Issuer)
+			fmt.Fprintf(w, "+%s+%s+\n", strings.Repeat("-", 27), strings.Repeat("-", 32))
 		}
 	}
 	w.Flush()
