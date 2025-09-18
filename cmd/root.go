@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/lohaniprateek/pavi/pkg/utils"
+	"github.com/lohaniprateek/pavi/internal/utils"
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
 	Use:   "pavi",
 	Short: "Pavi is a fast and simple SSL/TLS certificate scanner.",
-	Long:  `
+	Long: `
 	
 	A command-line tool built with Go to scan SSL/TLS certificates for given domains, checking for expiration dates and other details.`,
 }

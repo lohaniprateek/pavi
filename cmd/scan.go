@@ -8,8 +8,8 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/lohaniprateek/pavi/pkg/scanner"
-	"github.com/lohaniprateek/pavi/pkg/utils"
+	"github.com/lohaniprateek/pavi/internal/scanner"
+	"github.com/lohaniprateek/pavi/internal/utils"
 
 	"github.com/spf13/cobra"
 )
@@ -86,7 +86,7 @@ func init() {
 
 // printResults formats the output in a clean, aligned table.
 func printResults(results []scanner.ScanResult) {
-	const format = "2006-01-02" // YYYY-MM-DD format for dates
+	const format = "2006-01-02"
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
 
 	for _, res := range results {
